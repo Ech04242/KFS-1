@@ -4,5 +4,5 @@ void kernel_main(void)
 {
 	term_init();
 	term_move_cursor();   
-	term_write_str("42\n");
-}
+	ft_printk("42\n");
+}	

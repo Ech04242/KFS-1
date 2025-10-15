@@ -7,11 +7,11 @@ uint16_t* terminal_buffer = (uint16_t*)VGA_MEMORY;
 
 extern void outb(uint16_t port, uint8_t value);
 
-static inline uint8_t vga_entry_color(enum vga_color text_color, enum vga_color bg_color)
-{ return text_color | bg_color << 4; }
+static inline uint8_t vga_entry_color(enum vga_color text_color, enum vga_color bg_color) { 
+	return (text_color | bg_color << 4); 
+}
 
-void term_move_cursor()
-{
+void term_move_cursor() {
     if (terminal_row >= VGA_HEIGHT || terminal_column >= VGA_WIDTH)
         return;
     uint16_t pos = terminal_row * VGA_WIDTH + terminal_column;
@@ -21,16 +21,8 @@ void term_move_cursor()
     outb(VGA_PORT_DATA, pos & 0xFF);
 }
 
-static inline uint16_t vga_entry(unsigned char c, uint8_t color)
-{ return (uint16_t) c | (uint16_t) color << 8; }
-
-size_t ft_strlen(const char* str)
-{
-	size_t res = 0;
-
-	while (*(str++))
-		{ res++; }
-	return res;
+static inline uint16_t vga_entry(unsigned char c, uint8_t color) { 
+	return ((uint16_t) c | (uint16_t) color << 8); 
 }
 
 void term_init()

@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <stddef.h>
 
+#include <stdarg.h>
+#include <stdbool.h>
+
 #define VGA_WIDTH 80
 #define VGA_HEIGHT 25
 #define VGA_MEMORY 0xB8000
@@ -28,7 +31,7 @@ enum vga_color {
 	VGA_COLOR_WHITE = 15,
 };
 
-
+// utils.c
 size_t ft_strlen(const char* str);
 
 void term_init();
@@ -37,3 +40,7 @@ void term_put_entry_at(char c, uint8_t color, size_t x, size_t y);
 void term_write(const char* str, size_t len);
 void term_write_str(const char* str);
 void term_move_cursor();
+
+// printk.c
+void ft_printk(const char* fmt, ...)
+

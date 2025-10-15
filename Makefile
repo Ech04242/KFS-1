@@ -32,7 +32,7 @@ FLAG = -MMD -Wall -g3 -Werror -Wextra -m32 -ffreestanding -fno-builtin -fno-stac
 
 DIR_HEADER  = headers/
 SRC_PATH = C/src/
-SRC = kernel.c main.c
+SRC =	main.c	printk.c utils.c kernel.c 
 OBJ_PATH	=	.obj/
 OBJ		=	$(SRC:.c=.o)
 OBJS	=	$(addprefix $(OBJ_PATH), $(OBJ))
@@ -49,12 +49,7 @@ MKDIR	=	mkdir -p
 #        INCLUDES       #
 #########################
 
-# $(NAME): $(OBJS)
-# 	nasm -felf32 ./Amorcage/boot.asm -o .obj/boot.o
-# 	@$(call green,"debut de la compilation de kfs1")
-# #	@$(CC) $(FLAG) $(OBJS) -o $(NAME)
-# 	ld -m elf_i386 -T ./linker/linker.ld -o kfs1 .obj/boot.o .obj/kernel.o .obj/main.o
-# 	@$(call purple,"compilation du programme accomplis avec succes !")
+
 $(NAME): $(OBJS)
 	nasm -f elf32 ./Amorcage/boot.asm -o .obj/boot.o
 	@$(call green,"debut de la compilation de kfs1")
@@ -68,9 +63,10 @@ $(NAME): $(OBJS)
 #########################
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
-	@mkdir -p .obj
-	@$(CC) $(FLAG) -c $< -o $@ -I $(DIR_HEADER)
+	@mkdir -p $(OBJ_PATH)
+	@$(CC) $(C_FLAGS) -c $< -o $@ -I $(DIR_HEADER)
 	@$(call green,"$< ✅")
+
 
 #########################
 #       CLEAN RULES     #
@@ -102,4 +98,4 @@ re: fclean
 
 all: $(NAME)
 
-.PHONY: all clear fclean re
+.PHONY: all clean fclean re all
