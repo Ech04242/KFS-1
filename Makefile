@@ -70,7 +70,10 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 
 build_iso:
 	docker build -t iso_maker ./Docker
-	docker run --mount type=bind,source=./,target=/app iso_maker
+	mkdir -p ./iso/boot/grub
+	cp kfs1.bin iso/boot/kfs1.bin
+	cp grub.cfg iso/boot/grub/grub.cfg
+	docker run --mount type=bind,source=./iso,target=/iso iso_maker
 
 
 #########################
@@ -88,6 +91,8 @@ clean:
 fclean:
 	@rm -f $(NAME)
 	@rm -rf .obj
+	@rm -rf iso/
+	@rm -f kfs1.bin
 	@$(call yelow,"fclean kfs1 ✅")
 
 #######################
@@ -105,7 +110,7 @@ run:
 	qemu-system-i386 -kernel kfs1.bin
 
 run_iso:
-	qemu-system-i386 -cdrom kfs1.iso
+	qemu-system-i386 -cdrom ./iso/kfs1.iso
 
 run_debug:
 	qemu-system-i386 -kernel kfs1.bin -s -S & gdb -x .gdbinit
