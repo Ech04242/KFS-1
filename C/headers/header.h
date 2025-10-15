@@ -1,3 +1,4 @@
+#pragma once
 #include <stdint.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -32,8 +33,10 @@ enum vga_color {
 };
 
 // utils.c
-size_t ft_strlen(const char* str);
+uint32_t ft_strlen(const char* str);
 
+
+// kernel.c
 void term_init();
 void term_set_color(uint8_t color);
 void term_put_entry_at(char c, uint8_t color, size_t x, size_t y);
@@ -42,5 +45,5 @@ void term_write_str(const char* str);
 void term_move_cursor();
 
 // printk.c
-void ft_printk(const char* fmt, ...)
+void ft_printk(const char* fmt, ...);
 

@@ -47,6 +47,7 @@ void term_put_entry_at(char c, uint8_t color, size_t x, size_t y)
 	terminal_buffer[index] = vga_entry(c, color);
 }
 
+// Fonction affichant un charactere dans le terminal VGA selon les variable terminal_row et terminal_column
 void term_put_char(char c)
 {
 	if (c == '\n') {

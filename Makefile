@@ -53,7 +53,7 @@ MKDIR	=	mkdir -p
 $(NAME): $(OBJS)
 	nasm -f elf32 ./Amorcage/boot.asm -o .obj/boot.o
 	@$(call green,"debut de la compilation de kfs1")
-	ld -m elf_i386 -T ./linker/linker.ld -o kfs1.bin .obj/boot.o .obj/kernel.o .obj/main.o
+	ld -m elf_i386 -T ./linker/linker.ld -o kfs1.bin .obj/boot.o .obj/kernel.o .obj/main.o .obj/utils.o .obj/printk.o
 #	objcopy -O binary kfs1.elf kfs1.bin
 	@$(call purple,"compilation du programme accomplie avec succès !")
 
@@ -64,7 +64,7 @@ $(NAME): $(OBJS)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@mkdir -p $(OBJ_PATH)
-	@$(CC) $(C_FLAGS) -c $< -o $@ -I $(DIR_HEADER)
+	@$(CC) $(FLAG) -c $< -o $@ -I $(DIR_HEADER)
 	@$(call green,"$< ✅")
 
 
@@ -95,6 +95,12 @@ re: fclean
 #######################
 #      ALL RULES      #
 #######################
+
+run:
+	qemu-system-i386 -kernel kfs1.bin
+
+run_debug:
+	qemu-system-i386 -kernel kfs1.bin -s -S & gdb -x .gdbinit
 
 all: $(NAME)
 

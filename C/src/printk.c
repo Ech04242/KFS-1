@@ -91,6 +91,7 @@ void ft_printk(const char* fmt, ...)
                     term_put_char(c);
             }
         }
+        c = *fmt;
     }
     va_end(args);
 }
