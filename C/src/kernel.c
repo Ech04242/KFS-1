@@ -25,6 +25,7 @@ static inline uint16_t vga_entry(unsigned char c, uint8_t color) {
 	return ((uint16_t) c | (uint16_t) color << 8); 
 }
 
+// Initialisation du terminal en vidant tout l'affichage.
 void term_init()
 {
 	terminal_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
@@ -38,6 +39,8 @@ void term_init()
 	}
 }
 
+// Fonction pour changer la couleur du caractere en cours
+// A changer avant d'afficher le caractere
 void term_set_color(uint8_t color)
 { terminal_color = color; }
 
@@ -74,5 +77,7 @@ void term_write(const char* str, size_t len)
 		{ term_put_char(str[i]); }
 }
 
+// Fonction pour afficher une chaine de caractere brute a l'ecran
+// Si besoin de formattage, utiliser printk
 void term_write_str(const char* str)
 { term_write(str, ft_strlen(str)); }
