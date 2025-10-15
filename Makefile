@@ -68,6 +68,11 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@$(call green,"$< ✅")
 
 
+build_iso:
+	docker build -t iso_maker ./Docker
+	docker run --mount type=bind,source=./,target=/app iso_maker
+
+
 #########################
 #       CLEAN RULES     #
 #########################
@@ -98,6 +103,9 @@ re: fclean
 
 run:
 	qemu-system-i386 -kernel kfs1.bin
+
+run_iso:
+	qemu-system-i386 -cdrom kfs1.iso
 
 run_debug:
 	qemu-system-i386 -kernel kfs1.bin -s -S & gdb -x .gdbinit
