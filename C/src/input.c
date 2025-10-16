@@ -9,7 +9,8 @@ static const char scancode_set1[128] = {
     'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 0, 
     0, 0, ' '};
 
-char keyboard_getchar(void) {
+char keyboard_getchar(void)
+{
 	uint8_t scancode = inb(0x60);
 	if (scancode & 0x80)
 		return (0);

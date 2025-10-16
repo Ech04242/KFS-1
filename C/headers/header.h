@@ -34,6 +34,7 @@ enum vga_color {
 
 // utils.c
 uint32_t ft_strlen(const char* str);
+void	*ft_memmove(void *dest, const void *src, size_t n);
 
 // kernel.c
 void term_init();
@@ -43,6 +44,7 @@ void term_write(const char* str, size_t len);
 void term_write_str(const char* str);
 void term_move_cursor();
 void term_put_char(char c);
+void term_scroll();
 
 // printk.c
 void ft_printk(const char* fmt, ...);
