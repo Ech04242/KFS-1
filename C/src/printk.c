@@ -27,11 +27,11 @@ static void itoa(int value, char* buffer)
 
 static void utoa_hex(uint32_t value, char* buffer)
 {
-    const char* digits = "0123456789abcdef";
-    int i = 0;
-    buffer[i++] = '0';
-    buffer[i++] = 'x';
+    const char* digits = "0123456789abcdef";    
     bool started = false;
+    int i = 2;
+    buffer[0] = '0';
+    buffer[1] = 'x';
     for (int shift = 28; shift >= 0; shift -= 4) {
         uint8_t nybble = (value >> shift) & 0xF;
         if (nybble || started || shift == 0) {
@@ -58,9 +58,8 @@ void ft_printk(const char* fmt, ...)
                 return ;
             }
             c = *fmt++;
-            if (c == 's') {
+            if (c == 's')
                 term_write_str(va_arg(args, const char*));
-            }
             else if (c == 'd') {
                 int val = va_arg(args, int);
                 char buf[12];

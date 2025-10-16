@@ -32,7 +32,7 @@ FLAG = -MMD -Wall -g3 -Werror -Wextra -m32 -ffreestanding -fno-builtin -fno-stac
 
 DIR_HEADER  = headers/
 SRC_PATH = C/src/
-SRC =	main.c	printk.c utils.c kernel.c 
+SRC =	main.c	printk.c utils.c kernel.c input.c print_message.c
 OBJ_PATH	=	.obj/
 OBJ		=	$(SRC:.c=.o)
 OBJS	=	$(addprefix $(OBJ_PATH), $(OBJ))
@@ -49,13 +49,11 @@ MKDIR	=	mkdir -p
 #        INCLUDES       #
 #########################
 
-
-$(NAME): $(OBJS)
-	nasm -f elf32 ./Amorcage/boot.asm -o .obj/boot.o
-	@$(call green,"debut de la compilation de kfs1")
-	ld -m elf_i386 -T ./linker/linker.ld -o kfs1.bin .obj/boot.o .obj/kernel.o .obj/main.o .obj/utils.o .obj/printk.o
-#	objcopy -O binary kfs1.elf kfs1.bin
-	@$(call purple,"compilation du programme accomplie avec succès !")
+$(NAME): $(OBJS) Amorcage/boot.asm
+	@nasm -f elf32 Amorcage/boot.asm -o .obj/boot.o
+	$(call green,"Compilation de kfs1...")
+	@ld -m elf_i386 -T linker/linker.ld -o kfs1.bin .obj/boot.o $(OBJS)
+	$(call purple,"Build terminé avec succès!")
 
 
 #########################
