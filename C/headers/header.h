@@ -18,6 +18,8 @@
 #define F3 61
 #define F4 62
 
+#define NUM_PROFILES 4
+
 enum vga_color {
 	VGA_COLOR_BLACK = 0,
 	VGA_COLOR_BLUE = 1,
@@ -40,6 +42,7 @@ enum vga_color {
 // utils.c
 uint32_t ft_strlen(const char* str);
 void	*ft_memmove(void *dest, const void *src, size_t n);
+void	*ft_memcpy(void *dest, const void *src, size_t n);
 
 // kernel.c
 void term_init();
@@ -50,6 +53,7 @@ void term_write_str(const char* str);
 void term_move_cursor();
 void term_put_char(char c);
 void term_scroll();
+void switch_profile(int profile);	
 
 // printk.c
 void ft_printk(const char* fmt, ...);
@@ -60,3 +64,6 @@ char keyboard_getchar(void);
 // print_message.c
 void print_open_message();
 void print_user();
+
+// init.c
+void    init_all_profil();

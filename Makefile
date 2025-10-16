@@ -32,7 +32,7 @@ FLAG = -MMD -Wall -g3 -Werror -Wextra -m32 -ffreestanding -fno-builtin -fno-stac
 
 DIR_HEADER  = headers/
 SRC_PATH = C/src/
-SRC =	main.c	printk.c utils.c kernel.c input.c print_message.c
+SRC =	main.c	printk.c utils.c kernel.c input.c print_message.c init.c
 OBJ_PATH	=	.obj/
 OBJ		=	$(SRC:.c=.o)
 OBJS	=	$(addprefix $(OBJ_PATH), $(OBJ))
@@ -64,7 +64,6 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@mkdir -p $(OBJ_PATH)
 	@$(CC) $(FLAG) -c $< -o $@ -I $(DIR_HEADER)
 	@$(call green,"$< ✅")
-
 
 build_iso:
 	docker build -t iso_maker ./Docker

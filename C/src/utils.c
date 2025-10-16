@@ -9,6 +9,21 @@ uint32_t ft_strlen(const char* str)
 	return res;
 }
 
+void	*ft_memcpy(void *dest, const void *src, size_t n)
+{
+	unsigned char	*res_dest;
+	unsigned char	*res_src;
+
+	res_dest = (unsigned char *)dest;
+	res_src = (unsigned char *)src;
+	while (n--)
+	{
+		*res_dest = *res_src;
+		res_dest++;
+		res_src++;
+	}
+	return (dest);
+}
 
 void	*ft_memmove(void *dest, const void *src, size_t n)
 {
