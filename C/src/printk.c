@@ -49,32 +49,37 @@ void ft_printk(const char* fmt, ...)
 
     va_start(args, fmt);
     c = *fmt;
-    while (*fmt++) {
+    while (*fmt++)
+    {
         if (c != '%')
             term_put_char(c);
         else {
-            if (!(*fmt)){
+            if (!(*fmt))
+            {
                 term_put_char('%');
                 return ;
             }
             c = *fmt++;
             if (c == 's')
                 term_write_str(va_arg(args, const char*));
-            else if (c == 'd') {
+            else if (c == 'd')
+            {
                 int val = va_arg(args, int);
                 char buf[12];
                 itoa(val, buf);
                 const char* s = buf;
                 term_write_str(s);
             }
-            else if (c == 'x') {
+            else if (c == 'x')
+            {
                 unsigned int val = va_arg(args, unsigned int);
                 char buf[12];
                 utoa_hex(val, buf);
                 const char* s = buf;
                 term_write_str(s);
             }
-            else if (c == 'c') {
+            else if (c == 'c')
+            {
                 char cval = (char)va_arg(args, int);
                 term_put_char(cval);
             }

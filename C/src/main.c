@@ -14,20 +14,16 @@ void kernel_main(void)
 	print_user();
 	while (42){
 		uint8_t status = inb(0x64);
-		if (status & 1) {
+		if (status & 1)
+		{
 			char c = keyboard_getchar();
-            if (c == '\n'){
-				term_put_char('\n');
-				print_user();
+			if (c == '\b' && terminal_column > 6)
+			{
+				terminal_column--;
+				term_put_entry_at(' ', 7, terminal_column, terminal_row);
+				term_move_cursor();
 			}
-			else if (c == '\b'){
-				if (terminal_column > 6){
-					terminal_column--;
-					term_put_entry_at(' ', 7, terminal_column, terminal_row);
-					term_move_cursor();
-				}
-			}
-			else if (c == F1)
+      else if (c == F1)
 				ft_printk("profil 1 a charger");
 			else if (c == F2)
 				ft_printk("profil 2 a charger");
@@ -36,7 +32,10 @@ void kernel_main(void)
 			else if (c == F4)
 				ft_printk("profil 4 a charger");
 			else if (c)
+			{
 				term_put_char(c);
+        if (c == '\n')
+          print_user();
 		}
 	}
 }
