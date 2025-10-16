@@ -32,7 +32,7 @@ FLAG = -MMD -Wall -g3 -Werror -Wextra -m32 -ffreestanding -fno-builtin -fno-stac
 
 DIR_HEADER  = headers/
 SRC_PATH = C/src/
-SRC = kernel.c main.c
+SRC =	main.c	printk.c utils.c kernel.c input.c print_message.c
 OBJ_PATH	=	.obj/
 OBJ		=	$(SRC:.c=.o)
 OBJS	=	$(addprefix $(OBJ_PATH), $(OBJ))
@@ -49,18 +49,11 @@ MKDIR	=	mkdir -p
 #        INCLUDES       #
 #########################
 
-# $(NAME): $(OBJS)
-# 	nasm -felf32 ./Amorcage/boot.asm -o .obj/boot.o
-# 	@$(call green,"debut de la compilation de kfs1")
-# #	@$(CC) $(FLAG) $(OBJS) -o $(NAME)
-# 	ld -m elf_i386 -T ./linker/linker.ld -o kfs1 .obj/boot.o .obj/kernel.o .obj/main.o
-# 	@$(call purple,"compilation du programme accomplis avec succes !")
-$(NAME): $(OBJS)
-	nasm -f elf32 ./Amorcage/boot.asm -o .obj/boot.o
-	@$(call green,"debut de la compilation de kfs1")
-	ld -m elf_i386 -T ./linker/linker.ld -o kfs1.bin .obj/boot.o .obj/kernel.o .obj/main.o
-#	objcopy -O binary kfs1.elf kfs1.bin
-	@$(call purple,"compilation du programme accomplie avec succès !")
+$(NAME): $(OBJS) Amorcage/boot.asm
+	@nasm -f elf32 Amorcage/boot.asm -o .obj/boot.o
+	$(call green,"Compilation de kfs1...")
+	@ld -m elf_i386 -T linker/linker.ld -o kfs1.bin .obj/boot.o $(OBJS)
+	$(call purple,"Build terminé avec succès!")
 
 
 #########################
@@ -68,9 +61,18 @@ $(NAME): $(OBJS)
 #########################
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
-	@mkdir -p .obj
+	@mkdir -p $(OBJ_PATH)
 	@$(CC) $(FLAG) -c $< -o $@ -I $(DIR_HEADER)
 	@$(call green,"$< ✅")
+
+
+build_iso:
+	docker build -t iso_maker ./Docker
+	mkdir -p ./iso/boot/grub
+	cp kfs1.bin iso/boot/kfs1.bin
+	cp grub.cfg iso/boot/grub/grub.cfg
+	docker run --mount type=bind,source=./iso,target=/iso iso_maker
+
 
 #########################
 #       CLEAN RULES     #
@@ -87,6 +89,8 @@ clean:
 fclean:
 	@rm -f $(NAME)
 	@rm -rf .obj
+	@rm -rf iso/
+	@rm -f kfs1.bin
 	@$(call yelow,"fclean kfs1 ✅")
 
 #######################
@@ -100,6 +104,15 @@ re: fclean
 #      ALL RULES      #
 #######################
 
+run:
+	qemu-system-i386 -kernel kfs1.bin
+
+run_iso:
+	qemu-system-i386 -cdrom ./iso/kfs1.iso
+
+run_debug:
+	qemu-system-i386 -kernel kfs1.bin -s -S & gdb -x .gdbinit
+
 all: $(NAME)
 
-.PHONY: all clear fclean re
+.PHONY: all clean fclean re all

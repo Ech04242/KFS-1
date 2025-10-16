@@ -1,6 +1,10 @@
+#pragma once
 #include <stdint.h>
 #include <stdlib.h>
 #include <stddef.h>
+
+#include <stdarg.h>
+#include <stdbool.h>
 
 #define VGA_WIDTH 80
 #define VGA_HEIGHT 25
@@ -28,12 +32,25 @@ enum vga_color {
 	VGA_COLOR_WHITE = 15,
 };
 
+// utils.c
+uint32_t ft_strlen(const char* str);
+void	*ft_memmove(void *dest, const void *src, size_t n);
 
-size_t ft_strlen(const char* str);
-
+// kernel.c
 void term_init();
 void term_set_color(uint8_t color);
 void term_put_entry_at(char c, uint8_t color, size_t x, size_t y);
 void term_write(const char* str, size_t len);
 void term_write_str(const char* str);
 void term_move_cursor();
+void term_put_char(char c);
+void term_scroll();
+
+// printk.c
+void ft_printk(const char* fmt, ...);
+
+// input.c
+char keyboard_getchar(void);
+
+// print_message.c
+void print_open_message();
