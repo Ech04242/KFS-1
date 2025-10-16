@@ -13,6 +13,11 @@
 #define VGA_PORT_COMMAND 0x3D4
 #define VGA_PORT_DATA    0x3D5
 
+#define F1 59
+#define F2 60
+#define F3 61
+#define F4 62
+
 enum vga_color {
 	VGA_COLOR_BLACK = 0,
 	VGA_COLOR_BLUE = 1,
@@ -52,3 +57,4 @@ char keyboard_getchar(void);
 
 // print_message.c
 void print_open_message();
+void print_user();

@@ -65,24 +65,18 @@ void ft_printk(const char* fmt, ...)
                 char buf[12];
                 itoa(val, buf);
                 const char* s = buf;
-                while (*s)
-                    term_put_char(*s++);
+                term_write_str(s);
             }
             else if (c == 'x') {
                 unsigned int val = va_arg(args, unsigned int);
                 char buf[12];
                 utoa_hex(val, buf);
                 const char* s = buf;
-                while (*s)
-                    term_put_char(*s++);
+                term_write_str(s);
             }
             else if (c == 'c') {
                 char cval = (char)va_arg(args, int);
                 term_put_char(cval);
-            }
-            else if (c == '%'){
-                term_put_char('%');
-                term_put_char('%');
             }
             else {
                 term_put_char('%');
