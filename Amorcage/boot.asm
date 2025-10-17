@@ -1,46 +1,48 @@
-MBALIGN equ 1 << 0 ; Alignement des pages
-MEMINFO equ 1 << 1 ; permet d'avoir la carte de memoire
-MBFLAGS equ MBALIGN | MEMINFO ; Gere le flag multiboot
-MAGIC equ 0x1BADB002 ; permet a grub de trouver le header
+MBALIGN equ 1 << 0        ; Alignement des pages
+MEMINFO equ 1 << 1        ; Permet d'avoir la carte mémoire
+MBFLAGS equ MBALIGN | MEMINFO ; Gestion des flags multiboot
+MAGIC equ 0x1BADB002      ; Magic number pour GRUB multiboot
 CHECKSUM equ -(MAGIC + MBFLAGS)
 
-; Ces valeures sont documentes dans le standart de multiboot et serons cherches par le bootloader.
+; Header Multiboot, aligné 4 octets, placé au début du binaire
 section .multiboot
-align 4
-	dd MAGIC
-	dd MBFLAGS
-	dd CHECKSUM
+    align 4
+    dd MAGIC
+    dd MBFLAGS
+    dd CHECKSUM
 
 section .bss
-align 16
+    align 16
 stack_bottom:
-resb 16384
+    resb 16384            ; réserve 16 Ko pour la pile
 stack_top:
 
 section .text
-global _start:function (_start.end - _start)
+    global _start
+    extern kernel_main
+
 _start:
-	mov esp, stack_top
+    mov esp, stack_top     ; Initialise la pile
+    call kernel_main       ; Appel du noyau en C
+    cli                    ; Désactive interruptions
 
+.hang:
+    hlt                    ; Stoppe le processeur en attendant interruption
+    jmp .hang              ; Boucle infinie
 
-	extern kernel_main
-	call kernel_main
-
-	cli
-.hang:	hlt
-	jmp .hang
-.end:
-
-; outb.asm
-global outb
-section .text
+; Fonction outb : void outb(uint16_t port, uint8_t val);
+    global outb
 outb:
-    ; paramètres : 
-    ;   port = [esp + 4]
-    ;   value = [esp + 8]
+    ; Paramètres sur la pile: [esp + 4] = port, [esp + 8] = valeur
+    mov dx, [esp + 4]
+    mov al, [esp + 8]
+    out dx, al
+    ret
 
-    mov dx, [esp + 4]    ; charger le port dans dx
-    mov al, [esp + 8]    ; charger la valeur dans al
-    out dx, al           ; écrire sur le port
-
+; Fonction inb : uint8_t inb(uint16_t port);
+    global inb
+inb:
+    mov dx, [esp + 4]
+    in al, dx
+    movzx eax, al
     ret
