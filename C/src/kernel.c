@@ -59,7 +59,7 @@ void term_put_entry_at(char c, uint8_t color, size_t x, size_t y)
 	const size_t index = y * VGA_WIDTH + x;
 
 	terminal_buffer[index] = vga_entry(c, color);
-	uint16_t* vga = (uint16_t*)0xB8000;
+	uint16_t* vga = (uint16_t*)VGA_MEMORY;
     vga[index] = vga_entry(c, color);
 }
 
@@ -71,7 +71,7 @@ void switch_profile(int profile) {
     terminal_buffer = profile_buffers[profile];	
 	term_move_cursor();
 
-    uint16_t* vga = (uint16_t*)0xB8000;
+    uint16_t* vga = (uint16_t*)VGA_MEMORY;
     for (int i = 0; i < VGA_WIDTH * VGA_HEIGHT; i++) {
         vga[i] = terminal_buffer[i];
     }
@@ -79,7 +79,15 @@ void switch_profile(int profile) {
 
 void term_scroll()
 {
-	ft_memmove(terminal_buffer, terminal_buffer + VGA_WIDTH, 65535);
+	ft_memmove(terminal_buffer, terminal_buffer + VGA_WIDTH, (VGA_HEIGHT - 1) * VGA_WIDTH * sizeof(uint16_t));
+    size_t last_line_start = (VGA_HEIGHT - 1) * VGA_WIDTH;
+    for (size_t i = 0; i < VGA_WIDTH; i++) {
+        terminal_buffer[last_line_start + i] = vga_entry(' ', terminal_color);
+    }
+	uint16_t* vga = (uint16_t*)VGA_MEMORY;
+	for (int i = 0; i < VGA_WIDTH * VGA_HEIGHT; i++) {
+		vga[i] = terminal_buffer[i];
+	}
 	terminal_column[activ_user] = 0;
 	terminal_row[activ_user] = 24;
 	term_move_cursor();
@@ -103,7 +111,7 @@ void term_put_char(char c)
 		}
 	}
 	if (terminal_row[activ_user] == VGA_HEIGHT)
-		{ term_scroll(); }
+		term_scroll(); 
 	term_move_cursor();
 }
 
